@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from "fs";
 import { join } from "path";
-import { SIMULATED_PUBLIC_JWK } from "../tide-mock/simulatedKeys";
+import { SIMULATED_PUBLIC_JWK } from "../tide-mock/simulatedKeys.ts";
 
 export interface TidecloakConfig {
   realm: string;
