@@ -1,6 +1,6 @@
 import { jwtVerify, createLocalJWKSet } from "jose";
 import type { JWTPayload } from "jose";
-import { loadTideConfig } from "./tidecloakConfig";
+import { loadTideConfig } from "./tidecloakConfig.ts";
 
 // Lazy initialization — do NOT load config at module level.
 // Next.js 16 evaluates module-level code during `next build` for static

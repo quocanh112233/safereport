@@ -14,7 +14,7 @@ The introduction description calls UNLOCKED “Challenge 1”, whereas the conte
 | Build a working proof of concept using TideCloak | Actual licensed realm, real adapter, sign-in integration, Tide-protected private reporting keys and browser encryption | Implemented; operator reports build, automated checks and HTTP smoke tests passing; two-account Tide flow still needs recorded evidence |
 | Use Tide MCP with an AI coding agent for the integration | Tide MCP scenario/template/hosting/branding/doctor tools used | Done |
 | Public GitHub repository with a project README | Local Git repository and README with the reference template's five sections | Local material exists; no public SafeReport repository URL verified |
-| Two-minute demonstration video | `docs/demo.md` provides the script | Script only; no recorded video verified |
+| Two-minute demonstration video | `video_demo/` contains the recorded demo video; `docs/demo.md` provides the script | Done (`video_demo/2026-10-22 17-55-38.mp4`) |
 
 The descriptions do not provide scoring weights, mandatory folder naming, a submission deadline, or the complete submission mechanism. Do not claim those details are confirmed.
 

@@ -2,13 +2,14 @@
   "name": "safereport",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "init": "bash scripts/init-tidecloak.sh",
     "test:setup": "node tests/setup.test.mjs",
-    "test": "node --experimental-strip-types tests/reports.test.mjs && node --experimental-strip-types tests/security.test.mjs && node tests/setup.test.mjs"
+    "test": "node --experimental-strip-types tests/reports.test.mjs && node --experimental-strip-types tests/security.test.mjs && node tests/setup.test.mjs && node --experimental-strip-types tests/simulated.test.mjs"
   },
   "dependencies": {
     "@tidecloak/nextjs": "0.14.17",

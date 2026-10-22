@@ -68,6 +68,21 @@ export function ReportWorkspace({ userId }: { userId: string }) {
 
   function lock() { setPrivateKey(null); setStatus('Reporting key locked. Opened reports have been hidden.'); }
 
+  async function deleteKey() {
+    if (!window.confirm('Are you sure you want to delete this reporting key from the server? You can then generate a brand new key.')) return;
+    setBusy(true); setStatus('Deleting reporting key from server…');
+    try {
+      await api('/api/identity', { method: 'DELETE' });
+      setIdentity(null);
+      setPrivateKey(null);
+      setStatus('Reporting key deleted. You can now create a brand new key.');
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Could not delete reporting key.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return <>
     <div className="workspace-heading"><div><div className="eyebrow">YOUR PRIVATE WORKSPACE</div><h1>Speak with confidence.</h1></div>
       <button className="text-button" onClick={() => { lock(); logout().catch(() => setStatus('Sign out could not complete. Your reporting key is locked; try signing out again.')); }}>Sign out ↗</button></div>
@@ -79,7 +94,15 @@ export function ReportWorkspace({ userId }: { userId: string }) {
         <label htmlFor="account-id">Account ID</label><input id="account-id" value={userId} readOnly />
         {identity && <><label htmlFor="key-fingerprint">Key fingerprint · SHA-256</label><textarea id="key-fingerprint" value={identity.fingerprint} readOnly rows={3} spellCheck={false} />
           <button className="text-button" onClick={async () => { try { await navigator.clipboard.writeText(`Account: ${userId}\nFingerprint: ${identity.fingerprint}`); setStatus('Account ID and fingerprint copied.'); } catch { setStatus('Copy unavailable. Select and copy the account ID and fingerprint manually.'); } }}>Copy recipient details</button></>}
-        <div className="key-action">{privateKey ? <button onClick={lock}>Lock workspace</button> : <button className="primary" disabled={busy} onClick={unlock}>{busy ? 'Contacting Tide…' : identity ? 'Unlock with Tide' : 'Create my reporting key'}</button>}</div>
+        <div className="key-action">
+          {privateKey ? <>
+            <button onClick={lock}>Lock workspace</button>
+            <button className="text-button" style={{ color: '#d32f2f', fontSize: '12px', marginTop: '6px' }} disabled={busy} onClick={deleteKey}>Delete key & generate new</button>
+          </> : <>
+            <button className="primary" disabled={busy} onClick={unlock}>{busy ? 'Contacting Tide…' : identity ? 'Unlock with Tide' : 'Create my reporting key'}</button>
+            {identity && <button className="text-button" style={{ color: '#d32f2f', fontSize: '12px', marginTop: '6px' }} disabled={busy} onClick={deleteKey}>Delete key & generate new</button>}
+          </>}
+        </div>
         <p className="fine-print">Your unlocked key stays in this page’s memory. Lock or sign out when finished. No name or email is collected here.</p>
       </aside>
       <section className="reports-panel" aria-label="Reports">

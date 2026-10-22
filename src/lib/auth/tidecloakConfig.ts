@@ -1,5 +1,6 @@
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { join } from "path";
+import { SIMULATED_PUBLIC_JWK } from "../tide-mock/simulatedKeys";
 
 export interface TidecloakConfig {
   realm: string;
@@ -19,6 +20,18 @@ export function loadTideConfig(): TidecloakConfig {
   }
 
   const configPath = join(process.cwd(), "data", "tidecloak.json");
+  if (!existsSync(configPath)) {
+    return {
+      realm: "safereport",
+      "auth-server-url": "http://localhost:8080",
+      "ssl-required": "external",
+      resource: "safereport-app",
+      "public-client": true,
+      "confidential-port": 0,
+      jwk: { keys: [SIMULATED_PUBLIC_JWK] },
+    };
+  }
+
   const config = JSON.parse(readFileSync(configPath, "utf-8"));
 
   if (!config.jwk) {

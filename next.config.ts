@@ -8,9 +8,13 @@ const nextConfig: NextConfig = {
     // Fix 1: @tidecloak/js incomplete re-exports — suppress strict export checking
     config.module.strictExportPresence = false;
 
-    // Fix 2: @tidecloak/react CJS dist contains ESM syntax.
+    // Fix 2: @tidecloak/react CJS dist contains ESM syntax & simulated wrapper
     config.resolve.alias = {
       ...config.resolve.alias,
+      "@tidecloak/nextjs": path.resolve(
+        __dirname,
+        "src/lib/tide-mock/tidecloakNextjsWrapper.tsx"
+      ),
       "@tidecloak/react": path.resolve(
         __dirname,
         "node_modules/@tidecloak/react/dist/esm/index.js"

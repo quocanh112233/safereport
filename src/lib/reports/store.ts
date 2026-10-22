@@ -1,5 +1,5 @@
 import { createHash, createPublicKey } from 'node:crypto';
-import { mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import type { EncryptedReport } from './crypto';
 
@@ -39,6 +39,18 @@ export class ReportStore {
     if (!identity) throw new InputError('Account has not registered a reporting key yet.', 404);
     const { encryptedPrivateKey: _private, ...publicIdentity } = identity;
     return publicIdentity;
+  }
+
+  deleteIdentity(userId: string): boolean {
+    const id = validUser(userId);
+    const filePath = join(this.dir, 'identities', `${id}.json`);
+    try {
+      unlinkSync(filePath);
+      return true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
+      throw error;
+    }
   }
 
   async register(userId: string, publicKey: JsonWebKey, encryptedPrivateKey: string): Promise<Identity> {

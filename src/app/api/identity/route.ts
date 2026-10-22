@@ -19,3 +19,10 @@ export const POST = withAuth(async (request, jwt) => {
     return Response.json({ identity }, { status: 201, headers: { 'Cache-Control': 'no-store' } });
   } catch (error) { return apiError(error); }
 });
+
+export const DELETE = withAuth(async (request, jwt) => {
+  try {
+    store.deleteIdentity(jwt.sub!);
+    return Response.json({ success: true, message: 'Reporting key deleted successfully.' }, { headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) { return apiError(error); }
+});

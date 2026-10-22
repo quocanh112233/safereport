@@ -38,17 +38,16 @@ The DPoP relay is copied byte-for-byte from the official Tide pack. The inherite
 
 Implemented: branded sign-in, protected workspace, create/unlock reporting identity, verify recipient fingerprint, encrypt/send report, received/sent views, decrypt/hide content, inspect ciphertext, refresh, lock and sign out. A legacy `/vault` link redirects to the workspace; its old API returns `410` to authenticated callers. Existing vault data is not deleted.
 
-See [the demo script](docs/demo.md) and [design and trust boundaries](docs/design.md).
+See [the demo script](docs/demo.md) ([Bản Tiếng Việt](docs/demo.vi.md)), [video demo](video_demo/README.md), and [design and trust boundaries](docs/design.md).
 
 ## Run the current checkout
 
 The `safereport` realm has already been initialized on this machine, the admin account linked, and branding applied. **Do not rerun `npm run init` on this initialized checkout.**
 
 ```bash
-cd /home/quocanh/quoc_anh/challenge-2
 npm test
 npm run build
-npm run start -- --hostname 127.0.0.1
+npm run dev # or npm run start -- --hostname 127.0.0.1
 ```
 
 Open **http://localhost:3000**. Use `localhost` consistently, since the realm's allowed origin is configured for it. For development use `npm run dev -- --hostname 127.0.0.1` instead of `npm run start`.

@@ -2,18 +2,46 @@
 
 import { useTideCloak } from '@tidecloak/nextjs';
 import { ReportWorkspace } from './ReportWorkspace';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ReportApp() {
   const { authenticated, isInitializing, initError, isOffline, sessionExpired, login, reload, getValueFromToken } = useTideCloak();
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // SSR & initial client hydration skeleton: guarantees identical HTML between server and client
+  if (!mounted) {
+    return (
+      <main className="shell">
+        <header className="site-header">
+          <a href="/" className="brand"><img src="/safereport-logo.png" alt="" width="36" height="36" />SafeReport<span className="brand-caption">A safer place to speak.</span></a>
+          <span className="badge">Built with TideCloak</span>
+        </header>
+        <p role="status" className="loading">Connecting to your protected workspace…</p>
+        <footer>SafeReport · UNLOCKED prototype<span>Content encryption in your browser. Identity protection by Tide.</span></footer>
+      </main>
+    );
+  }
+
+  const isTideUnreachable = initError?.message?.includes('dpop_signing_alg_values_supported') ||
+                            initError?.message?.includes('Failed to fetch') ||
+                            initError?.message?.includes('NetworkError');
+
+  const displayError = isTideUnreachable
+    ? "TideCloak authentication server (:8080) is unreachable. Run './run.sh init' or 'docker start safereport-tidecloak' to start the local auth container."
+    : (initError?.message || error);
+
   const userId = getValueFromToken('sub');
   return <main className="shell">
     <header className="site-header">
       <a href="/" className="brand"><img src="/safereport-logo.png" alt="" width="36" height="36" />SafeReport<span className="brand-caption">A safer place to speak.</span></a>
       <span className="badge">Built with TideCloak</span>
     </header>
-    {(initError || error) && <p className="notice" role="alert">{initError?.message || error} <button onClick={reload}>Retry connection</button></p>}
+    {(initError || error) && <p className="notice" role="alert">{displayError} <button onClick={reload}>Retry connection</button></p>}
     {isOffline && <p className="notice" role="status">Connection unavailable. Tide must be reachable to unlock your reporting key.</p>}
     {sessionExpired && <p className="notice" role="status">Your session expired. Sign in again to continue.</p>}
     {isInitializing ? <p role="status" className="loading">Connecting to your protected workspace…</p> : authenticated && !sessionExpired && typeof userId === 'string' ?
