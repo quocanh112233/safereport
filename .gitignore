@@ -1,0 +1,18 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+.tide-pack/
+data/*.db
+data/*.db-*
+data/tidecloak.json
+data/keycloakdb*
+data/vault/
+data/safereport/
+*.tsbuildinfo
+out/
+build/
+scripts/.skycloak-api-key
+# Raw downloaded video metadata includes temporary signed URLs; keep sources local.
+docs/challenge-videos/
